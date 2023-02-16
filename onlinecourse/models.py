@@ -73,13 +73,21 @@ class Course(models.Model):
         
         return total_score
 
+# Lesson model
+class Lesson(models.Model):
+    title = models.CharField(max_length=200, default="title")
+    order = models.IntegerField(default=0)
+    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    content = models.TextField()
+
 # Create a Question Model:   
 # Other fields and methods you would like to design
 class Question(models.Model):
 
     # Has a One-To-Many (or Many-To-Many if you want to reuse questions) relationship with course
+    course = models.ForeignKey(Course, on_delete = models.CASCADE)
     # Foreign key to lesson
-    lesson = models.ForeignKey(Course, on_delete = models.CASCADE)
+    lesson = models.ForeignKey(Lesson, on_delete = models.CASCADE)
     # Has question content
     question_text = models.CharField(max_length = 200)
     # Has a grade point for each question
@@ -111,13 +119,6 @@ class Choice(models.Model):
 
     def __str__(self):
         return self.choice_text
-
-# Lesson model
-class Lesson(models.Model):
-    title = models.CharField(max_length=200, default="title")
-    order = models.IntegerField(default=0)
-    course = models.ForeignKey(Course, on_delete=models.CASCADE)
-    content = models.TextField()
 
 # Enrollment model
 # Once a user enrolled a class, an enrollment entry should be created between the user and course
