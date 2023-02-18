@@ -23,10 +23,12 @@ class Instructor(models.Model):
 
 # Learner model
 class Learner(models.Model):
+
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
     )
+
     STUDENT = 'student'
     DEVELOPER = 'developer'
     DATA_SCIENTIST = 'data_scientist'
@@ -37,20 +39,22 @@ class Learner(models.Model):
         (DATA_SCIENTIST, 'Data Scientist'),
         (DATABASE_ADMIN, 'Database Admin')
     ]
+
     occupation = models.CharField(
         null=False,
         max_length=20,
         choices=OCCUPATION_CHOICES,
         default=STUDENT
     )
+
     social_link = models.URLField(max_length=200)
 
     def __str__(self):
-        return self.user.username + "," + \
-               self.occupation
+        return self.user.username
 
 # Course model
 class Course(models.Model):
+
     name = models.CharField(null=False, max_length=30, default='online course')
     image = models.ImageField(upload_to='course_images/')
     description = models.CharField(max_length=1000)
@@ -61,8 +65,7 @@ class Course(models.Model):
     is_enrolled = False
 
     def __str__(self):
-        return "Name: " + self.name + "," + \
-               "Description: " + self.description
+        return self.name
     
     def total_score(self):
 
@@ -79,6 +82,9 @@ class Lesson(models.Model):
     order = models.IntegerField(default=0)
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
     content = models.TextField()
+
+    def __str__(self):
+        return self.title
 
 # Create a Question Model:   
 # Other fields and methods you would like to design
@@ -124,22 +130,32 @@ class Choice(models.Model):
 # Once a user enrolled a class, an enrollment entry should be created between the user and course
 # And we could use the enrollment to track information such as exam submissions
 class Enrollment(models.Model):
+
     AUDIT = 'audit'
     HONOR = 'honor'
     BETA = 'BETA'
+
     COURSE_MODES = [
         (AUDIT, 'Audit'),
         (HONOR, 'Honor'),
         (BETA, 'BETA')
     ]
+
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
     date_enrolled = models.DateField(default=now)
     mode = models.CharField(max_length=5, choices=COURSE_MODES, default=AUDIT)
     rating = models.FloatField(default=5.0)
 
+    def __str__(self):
+        return self.user.username
+
 # The submission model
 # One choice could belong to multiple submissions
 class Submission(models.Model):
     enrollment = models.ForeignKey(Enrollment, on_delete = models.CASCADE)
     choices = models.ManyToManyField(Choice)
+
+    def __str__(self):
+        return "Student: " + enrollment.user.username + "," + \
+               "Choices: " + choices.id

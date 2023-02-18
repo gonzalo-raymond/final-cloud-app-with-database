@@ -24,11 +24,24 @@ class CourseAdmin(admin.ModelAdmin):
     search_fields = ['name', 'description']
 
 class LessonAdmin(admin.ModelAdmin):
-    list_display = ['title']
+    list_display = ('title', "course")
 
 class QuestionAdmin(admin.ModelAdmin):
     inlines = [ChoiceInline]
-    list_display = ("id", "question_text", "grade", "lesson")
+    list_display = ("id", "question_text", "grade", "lesson", "course")
+
+    def get_form(self, request, obj=None, **kwargs):
+
+        form = super().get_form(request, obj, **kwargs)
+
+        course_value = 2
+
+        print(course_value)
+
+        form.base_fields["lesson"].queryset = Lesson.objects.filter(course__id = course_value)
+
+        return form
+        
     
 
 class ChoiceAdmin(admin.ModelAdmin):
@@ -42,3 +55,4 @@ admin.site.register(Question, QuestionAdmin)
 admin.site.register(Choice, ChoiceAdmin)
 admin.site.register(Instructor)
 admin.site.register(Learner)
+admin.site.register(Submission)
