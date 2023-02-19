@@ -1,11 +1,6 @@
 import sys
 from django.utils.timezone import now
-try:
-    from django.db import models
-except Exception:
-    print("There was an error loading django modules. Do you have django installed?")
-    sys.exit()
-
+from django.db import models
 from django.conf import settings
 import uuid
 
@@ -157,5 +152,5 @@ class Submission(models.Model):
     choices = models.ManyToManyField(Choice)
 
     def __str__(self):
-        return "Student: " + enrollment.user.username + "," + \
-               "Choices: " + choices.id
+        return "Student: " + self.enrollment.user.username + "," + \
+           "Choices: " + str(self.choices.id)
