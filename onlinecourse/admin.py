@@ -1,5 +1,23 @@
 from django.contrib import admin
+#from .forms import QuestionForm
+from django import forms
 from .models import Course, Lesson, Instructor, Learner, Question, Choice, Submission
+
+class QuestionForm(forms.ModelForm):
+
+    class Meta:
+        model = Question
+        fields = '__all__'
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        course_id = self.initial.get('course')
+
+        if course_id:
+            self.fields['lesson'].queryset = Lesson.objects.filter(course_id = course_id)
+        else:
+            self.fields['lesson'].queryset = Lesson.objects.all()
+
 
 # Register QuestionInline and ChoiceInline classes here
 
@@ -27,21 +45,12 @@ class LessonAdmin(admin.ModelAdmin):
     list_display = ('title', "course")
 
 class QuestionAdmin(admin.ModelAdmin):
+
     inlines = [ChoiceInline]
     list_display = ("id", "question_text", "grade", "lesson", "course")
 
-    def get_form(self, request, obj=None, **kwargs):
+    form = QuestionForm
 
-        form = super().get_form(request, obj, **kwargs)
-
-        course_value = 2
-
-        print(course_value)
-
-        form.base_fields["lesson"].queryset = Lesson.objects.filter(course__id = course_value)
-
-        return form
-        
     
 
 class ChoiceAdmin(admin.ModelAdmin):
