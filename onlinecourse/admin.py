@@ -3,23 +3,6 @@ from django import forms
 from .forms import QuestionForm
 from .models import Course, Lesson, Instructor, Learner, Question, Choice, Submission
 
-"""
-class QuestionForm(forms.ModelForm):
-
-    class Meta:
-        model = Question
-        fields = '__all__'
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        course_id = self.initial.get('course')
-
-        if course_id:
-            self.fields['lesson'].queryset = Lesson.objects.filter(course_id = course_id)
-        else:
-            self.fields['lesson'].queryset = Lesson.objects.all()
-"""
-
 # Register QuestionInline and ChoiceInline classes here
 
 class ChoiceInline(admin.StackedInline):

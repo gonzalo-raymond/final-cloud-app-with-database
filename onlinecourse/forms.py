@@ -19,4 +19,4 @@ class QuestionForm(forms.ModelForm):
             self.fields['lesson'].queryset = Lesson.objects.filter(course_id=course_id)
         else:
             # If the course field is empty, show an empty queryset for the lessons field
-            self.fields['lesson'].queryset = Lesson.objects.none()
+            self.fields['lesson'].queryset = Lesson.objects.all()
