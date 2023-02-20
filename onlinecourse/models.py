@@ -61,6 +61,10 @@ class Course(models.Model):
 
     def __str__(self):
         return self.name
+
+    def instructor(self):
+        return self.instructors.all().first()
+        
     
     def total_score(self):
 
