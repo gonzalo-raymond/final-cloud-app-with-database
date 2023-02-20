@@ -3,20 +3,20 @@ from django import forms
 from .models import Question, Lesson, Course
 
 class QuestionForm(forms.ModelForm):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        if 'course' in self.data:
-            try:
-                course_id = int(self.data.get('course'))
-                self.fields['lesson'].queryset = Lesson.objects.filter(course_id = course_id)
-            except (ValueError, TypeError):
-                pass
-        elif self.instance.pk:
-            self.fields['lesson'].queryset = self.instance.course.lesson_set
-
     class Meta:
         model = Question
-        fields = ('course', 'lesson', "question_text", "grade")
-        widgets = {
-            'course': forms.Select(attrs = {'class': 'course-selector'}),
-        }
+        fields = '__all__'
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # Get the course field from the form data
+        course_field = self['course']
+
+        # If the course field has a value, use it to filter the lessons queryset
+        if course_field.value():
+            course_id = course_field.value()
+            self.fields['lesson'].queryset = Lesson.objects.filter(course_id=course_id)
+        else:
+            # If the course field is empty, show an empty queryset for the lessons field
+            self.fields['lesson'].queryset = Lesson.objects.none()

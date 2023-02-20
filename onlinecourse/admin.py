@@ -1,8 +1,9 @@
 from django.contrib import admin
-#from .forms import QuestionForm
 from django import forms
+from .forms import QuestionForm
 from .models import Course, Lesson, Instructor, Learner, Question, Choice, Submission
 
+"""
 class QuestionForm(forms.ModelForm):
 
     class Meta:
@@ -17,7 +18,7 @@ class QuestionForm(forms.ModelForm):
             self.fields['lesson'].queryset = Lesson.objects.filter(course_id = course_id)
         else:
             self.fields['lesson'].queryset = Lesson.objects.all()
-
+"""
 
 # Register QuestionInline and ChoiceInline classes here
 

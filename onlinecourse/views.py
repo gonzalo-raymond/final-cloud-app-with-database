@@ -152,15 +152,19 @@ def show_exam_result(request, course_id, submission_id):
 
     questions = Question.objects.filter(course = course)
 
-    total_score = course.total_score
-
-
-    score = 0
+    total_score = 100
+    
+    # Calculate the total score
+    num_questions = questions.count()
+    correct_questions = 0
 
     for question in questions:
         if question.is_get_score(selected_ids):
-            score += question.grade
+            correct_questions += 1
 
+    score = int((correct_questions / num_questions) * 100)
+
+    print(score)
     context = {
         "course": course,
         "selected_ids": selected_ids,
